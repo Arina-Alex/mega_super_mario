@@ -13,7 +13,12 @@ void ConsoleUIFactory::clear_data() {
 	full_boxes.clear();
 	ships.clear();
 	enemies.clear();
+	flying_enemies.clear();
+	jumping_enemies.clear();
 	moneys.clear();
+	mushrooms.clear();
+	mushroom_boxes.clear();
+	moving_platforms.clear();
 }
 
 void ConsoleUIFactory::create_box(
@@ -27,14 +32,36 @@ void ConsoleUIFactory::create_box(
 }
 
 void ConsoleUIFactory::create_enemy(
-	const Coord& top_left, const int width, const int height
+	const Coord& top_left, const int width, const int height, float speed
 ) {
-	ConsoleEnemy* enemy = new ConsoleEnemy(top_left, width, height);
+	ConsoleEnemy* enemy = new ConsoleEnemy(top_left, width, height, speed);
 	enemies.push_back(enemy);
 	game->add_map_movable(enemy);
 	game->add_movable(enemy);
 	game->add_collisionable(enemy);
 	game_map->add_obj(enemy);
+}
+
+void ConsoleUIFactory::create_flying_enemy(
+	const Coord& top_left, const int width, const int height, float speed, float max_dist
+) {
+	ConsoleFlyingEnemy* f_enemy = new ConsoleFlyingEnemy(top_left, width, height, speed, max_dist);
+	flying_enemies.push_back(f_enemy);
+	game->add_map_movable(f_enemy);
+	game->add_movable(f_enemy);
+	game->add_collisionable(f_enemy);
+	game_map->add_obj(f_enemy);
+}
+
+void ConsoleUIFactory::create_jumping_enemy(
+	const Coord& top_left, const int width, const int height
+) {
+	ConsoleJumpingEnemy* j_enemy = new ConsoleJumpingEnemy(top_left, width, height);
+	jumping_enemies.push_back(j_enemy);
+	game->add_map_movable(j_enemy);
+	game->add_movable(j_enemy);
+	game->add_collisionable(j_enemy);
+	game_map->add_obj(j_enemy);
 }
 
 void ConsoleUIFactory::create_full_box(
@@ -74,6 +101,42 @@ void ConsoleUIFactory::create_money(
 	game->add_movable(money);
 	game->add_collisionable(money);
 	game_map->add_obj(money);
+}
+
+void ConsoleUIFactory::create_mushroom(
+	const Coord& top_left, const int width, const int height
+) {
+	ConsoleMushroom* mushroom = new ConsoleMushroom(top_left, width, height);
+	mushrooms.push_back(mushroom);
+	game->add_map_movable(mushroom);
+	game->add_movable(mushroom);
+	game->add_collisionable(mushroom);
+	game_map->add_obj(mushroom);
+}
+
+void ConsoleUIFactory::create_mushroom_box(
+	const Coord& top_left, const int width, const int height
+) {
+	ConsoleMushroomBox* mushroom_box = new ConsoleMushroomBox(top_left, width, height, this);
+	mushroom_boxes.push_back(mushroom_box);
+	game->add_collisionable(mushroom_box);
+	game->add_map_movable(mushroom_box);
+	game->add_static_obj(mushroom_box);
+	game_map->add_obj(mushroom_box);
+}
+
+void ConsoleUIFactory::create_moving_platform(
+    const Coord& top_left, const int width, const int height, float speed, float max_dist
+) {
+    ConsoleMovingPlatform* platform = new ConsoleMovingPlatform(top_left, width, height, speed, max_dist);
+    platform->set_mario(mario); 
+    
+    moving_platforms.push_back(platform);
+    
+    game->add_map_movable(platform);
+    game->add_movable(platform);
+    game->add_static_obj(platform); 
+    game_map->add_obj(platform);
 }
 
 void ConsoleUIFactory::create_ship(

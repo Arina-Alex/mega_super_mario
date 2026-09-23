@@ -18,12 +18,21 @@ biv::GameLevel* SecondLevel::get_next() {
 // 									PROTECTED
 // ----------------------------------------------------------------------------
 void SecondLevel::init_data() {
-	ui_factory->create_mario({39, 10}, 3, 3);
-	
-	ui_factory->create_ship({20, 25}, 40, 2);
-	ui_factory->create_ship({60, 20}, 10, 7);
-	ui_factory->create_ship({80, 25}, 20, 2);
-	ui_factory->create_ship({120, 20}, 10, 7);
-	ui_factory->create_ship({150, 25}, 40, 2);
-	ui_factory->create_ship({210, 20}, 10, 7);
+
+	ui_factory->create_box({16, 25}, 10, 3); 
+	ui_factory->create_mario({22, 10}, 3, 3);
+	ui_factory->create_mushroom_box({17, 16}, 3, 3);
+
+	ui_factory->create_moving_platform({42, 25}, 4, 1, 0.15, 15);
+
+	ui_factory->create_box({38, 15}, 4, 1); 
+	ui_factory->create_jumping_enemy({38, 12}, 3, 2); 
+
+	ui_factory->create_flying_enemy({50, 17}, 3, 2, 0.4, 3);
+	ui_factory->create_flying_enemy({50, 22}, 3, 2, 0.4, 3);
+
+	ui_factory->create_box({70, 25}, 10, 3);
+	ui_factory->create_ship({72, 20}, 10, 5);
+
+
 }

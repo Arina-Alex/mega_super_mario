@@ -30,6 +30,12 @@ void Mario::process_horizontal_static_collision(Rect* obj) noexcept {
 
 void Mario::process_mario_collision(Collisionable* mario) noexcept {}
 
+void Mario::process_mushroom_collision(Collisionable*) noexcept {
+    const int bottom = get_bottom();
+    height = 1;
+    top_left.y = bottom - height;
+}
+
 void Mario::process_vertical_static_collision(Rect* obj) noexcept {
 	if (vspeed > 0) {
 		// Марио упал на корабль.

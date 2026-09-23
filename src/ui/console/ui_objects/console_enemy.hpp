@@ -10,7 +10,7 @@
 namespace biv {
 	class ConsoleEnemy : public Enemy, public ConsoleUIObjectRectAdapter {
 		public:
-			ConsoleEnemy(const Coord& top_left, const int width, const int height);
+			ConsoleEnemy(const Coord& top_left, const int width, const int height, float speed);
 
 			char get_brush() const noexcept override;
 	};

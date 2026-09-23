@@ -14,7 +14,7 @@
 namespace biv {
 	class Enemy : public RectMapMovableAdapter, public Movable, public Collisionable {
 		public:
-			Enemy(const Coord& top_left, const int width, const int height);
+			Enemy(const Coord& top_left, const int width, const int height, float speed);
 
 			Rect get_rect() const noexcept override;
 			Speed get_speed() const noexcept override;
