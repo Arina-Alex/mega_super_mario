@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.2...3.27.5)
 
 project(super_mario)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+
 SET(CMAKE_CXX_FLAGS "-finput-charset=utf-8 -fexec-charset=utf-8")
 
 set(SOURCES main.cpp)
@@ -21,4 +26,7 @@ if(GAME_TYPE STREQUAL "WindowsConsole")
 elseif(GAME_TYPE STREQUAL "LinuxConsole")
 	target_link_libraries(${PROJECT_NAME} ncurses pthread)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX_CONSOLE)
+elseif(GAME_TYPE STREQUAL "QtGui")
+    target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE QT_GUI)
 endif()
