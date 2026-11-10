@@ -1,13 +1,15 @@
 #pragma once
+#include <vector>
 #include "game_map.hpp"
 #include "qt_window.hpp"
+#include "qt_ui_obj.hpp"
 #include <QApplication>
 
 namespace biv {
     class QtGameMap : public GameMap {
     private:
         QtWindow* window;
-        std::vector<QtRenderObject> objs;
+        std::vector<QtUIObject*> objs;
 
     public:
         QtGameMap(const int height, const int width, QtKeyboard* kb) 
@@ -20,16 +22,28 @@ namespace biv {
             delete window;
         }
 
-        void add_obj(int x, int y, int w, int h, QColor color) {
-            objs.push_back({x, y, w, h, color});
+        void add_obj(QtUIObject* obj) {
+            objs.push_back(obj);
         }
 
-        void clear() noexcept override {
-            objs.clear();
+        void remove_obj(QtUIObject* obj) {
+            objs.erase(std::remove(objs.begin(), objs.end(), obj), objs.end());
         }
+
+        void clear() noexcept override {}
 
         void refresh() noexcept override {
-            window->set_objects(objs);
+            std::vector<QtRenderObject> render_objs;
+            for (auto* obj : objs) {
+                render_objs.push_back({
+                    obj->get_left(),
+                    obj->get_top(),
+                    obj->get_width(),
+                    obj->get_height(),
+                    obj->get_color()
+                });
+            }
+            window->set_objects(render_objs);
             window->update(); 
         }
 
