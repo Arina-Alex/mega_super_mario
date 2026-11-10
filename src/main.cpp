@@ -20,7 +20,6 @@
 */
 #include <thread>
 
-#include "console_ui_factory.hpp"
 #include "first_level.hpp"
 #include "game.hpp"
 #include "game_level.hpp"
@@ -31,15 +30,21 @@
 #include "ui_factory.hpp"
 
 #ifdef WINDOWS_CONSOLE
+	#include "console_ui_factory.hpp"
 	#include "windows_control_settings.hpp"
 	#include "windows_keyboard.hpp"
 #elif defined(LINUX_CONSOLE)
+	#include "console_ui_factory.hpp"
 	#include "linux_control_settings.hpp"
 	#include "linux_keyboard.hpp"
 	#include "ncurses.h"
+#elif defined(QT_GUI)
+	#include <QApplication>
+	#include "qt_keyboard.hpp"
+	#include "qt_ui_factory.hpp"
 #endif
 
-int main() {
+int main(int argc, char* argv[]) {
 	// 1. Установка параметров игры
 	using namespace std::chrono_literals;
 	
@@ -49,21 +54,33 @@ int main() {
 	
 	biv::OSControlSettings* control_settings = nullptr;
 	biv::KeyBoard* keyboard = nullptr;
-	#ifdef WINDOWS_CONSOLE
-		control_settings = new biv::WindowsControlSettings();
-		keyboard = new biv::WindowsKeyBoard();
-		frame_delay = std::chrono::milliseconds(10);
-	#elif defined(LINUX_CONSOLE)
-		control_settings = new biv::LinuxControlSettings(map_height, map_weight);
-		keyboard = new biv::LinuxKeyboard();
-		frame_delay = std::chrono::milliseconds(50);
+	biv::UIFactory* ui_factory = nullptr;
+	biv::Game game;
+	
+	#ifdef QT_GUI
+		QApplication app(argc, argv);
+		auto* qt_kb = new biv::QtKeyboard();
+		keyboard = qt_kb;
+		ui_factory = new biv::QtUIFactory(&game, qt_kb);
+		frame_delay = std::chrono::milliseconds(30);
+	#else
+		#ifdef WINDOWS_CONSOLE
+			control_settings = new biv::WindowsControlSettings();
+			keyboard = new biv::WindowsKeyBoard();
+			frame_delay = std::chrono::milliseconds(10);
+		#elif defined(LINUX_CONSOLE)
+			control_settings = new biv::LinuxControlSettings(map_height, map_weight);
+			keyboard = new biv::LinuxKeyboard();
+			frame_delay = std::chrono::milliseconds(50);
+		#endif
+		if (control_settings) {
+			control_settings->init();
+		}
+		ui_factory = new biv::ConsoleUIFactory(&game);
 	#endif
 	
-	control_settings->init();
 	keyboard->on();
 	
-	biv::Game game;
-	biv::UIFactory* ui_factory = new biv::ConsoleUIFactory(&game);
 	biv::GameMap* game_map = ui_factory->get_game_map(map_height, map_weight);
 	biv::GameLevel* game_level = new biv::FirstLevel(ui_factory);
 	biv::Mario* mario = ui_factory->get_mario();
@@ -129,7 +146,9 @@ int main() {
 		
 		// 4. Обновление изображения на экране
 		game_map->refresh();
-		control_settings->set_cursor_start_position();
+		if (control_settings) {
+			control_settings->set_cursor_start_position();
+		}
 		game_map->show();
 		std::this_thread::sleep_for(frame_delay);
 	} while (
@@ -138,4 +157,5 @@ int main() {
 	);
 	
 	// 6. Завершение
+	return 0;
 }
