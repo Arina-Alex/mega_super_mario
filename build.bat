@@ -12,7 +12,7 @@ if not exist %BUILD_FOLDER% mkdir %BUILD_FOLDER%
 
 cd %BUILD_FOLDER%
 
-set GAME_TYPE=WindowsConsole
+set GAME_TYPE=QtGui
 
 cmake -G %BUILD_TYPE% -DGAME_TYPE=%GAME_TYPE% ..\%SOURCE_FOLDER%
 cmake --build .

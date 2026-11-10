@@ -18,8 +18,8 @@ namespace biv {
 
         int get_left() const { return rect->get_left(); }
         int get_top() const { return rect->get_top(); }
-        int get_width() const { return rect->get_width(); }
-        int get_height() const { return rect->get_height(); }
+        int get_width() const { return rect->get_right() - rect->get_left(); }
+        int get_height() const { return rect->get_bottom() - rect->get_top(); }
         
         QColor get_color() const { return color; }
         QString get_sprite_path() const { return sprite_path; }

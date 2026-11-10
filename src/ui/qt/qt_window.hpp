@@ -34,8 +34,8 @@ namespace biv {
         void keyPressEvent(QKeyEvent* event) override {
             if (!keyboard) return;
             switch (event->key()) {
-                case Qt::Key_A: keyboard->set_input(UserInput::MAP_LEFT); break;
-                case Qt::Key_D: keyboard->set_input(UserInput::MAP_RIGHT); break;
+                case Qt::Key_A: keyboard->set_input(UserInput::MAP_RIGHT); break;
+                case Qt::Key_D: keyboard->set_input(UserInput::MAP_LEFT); break;
                 case Qt::Key_Space: keyboard->set_input(UserInput::MARIO_JUMP); break;
                 case Qt::Key_Q: keyboard->set_input(UserInput::EXIT); break;
             }
