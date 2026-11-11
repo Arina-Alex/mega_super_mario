@@ -40,13 +40,13 @@ namespace biv {
     class QtFlyingEnemy : public FlyingEnemy, public QtUIObject {
     public:
         QtFlyingEnemy(const Coord& top_left, int w, int h, float speed, float max_dist) 
-            : FlyingEnemy(top_left, w, h, speed, max_dist), QtUIObject(this, QColor(0, 191, 255)) {}
+            : FlyingEnemy(top_left, w, h, speed, max_dist), QtUIObject(this, QColor(0, 191, 255), "assets/flying_enemy.png") {}
     };
 
     class QtJumpingEnemy : public JumpingEnemy, public QtUIObject {
     public:
         QtJumpingEnemy(const Coord& top_left, int w, int h) 
-            : JumpingEnemy(top_left, w, h), QtUIObject(this, QColor(255, 140, 0)) {}
+            : JumpingEnemy(top_left, w, h), QtUIObject(this, QColor(255, 140, 0), "assets/jumping_enemy.png") {}
     };
 
     class QtMoney : public Money, public QtUIObject {
@@ -64,18 +64,18 @@ namespace biv {
     class QtMushroomBox : public MushroomBox, public QtUIObject {
     public:
         QtMushroomBox(const Coord& top_left, int w, int h, UIFactory* factory) 
-            : MushroomBox(top_left, w, h, factory), QtUIObject(this, QColor(218, 165, 32)) {}
+            : MushroomBox(top_left, w, h, factory), QtUIObject(this, QColor(218, 165, 32), "assets/question_box.png") {}
     };
 
     class QtMovingPlatform : public MovingPlatform, public QtUIObject {
     public:
         QtMovingPlatform(const Coord& top_left, int w, int h, float speed, float max_dist) 
-            : MovingPlatform(top_left, w, h, speed, max_dist), QtUIObject(this, QColor(128, 128, 128)) {}
+            : MovingPlatform(top_left, w, h, speed, max_dist), QtUIObject(this, QColor(128, 128, 128), "assets/platform.png") {}
     };
 
     class QtShip : public Ship, public QtUIObject {
     public:
         QtShip(const Coord& top_left, int w, int h) 
-            : Ship(top_left, w, h), QtUIObject(this, QColor(0, 100, 0), "assets/ship.png") {}
+            : Ship(top_left, w, h), QtUIObject(this, QColor(0, 100, 0), "assets/pipe.png") {}
     };
 }
