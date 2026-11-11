@@ -40,7 +40,8 @@ namespace biv {
                     obj->get_top(),
                     obj->get_width(),
                     obj->get_height(),
-                    obj->get_color()
+                    obj->get_color(),
+                    obj->get_sprite_path()
                 });
             }
             window->set_objects(render_objs);

@@ -2,6 +2,10 @@
 #include <QWidget>
 #include <QPainter>
 #include <QKeyEvent>
+#include <QPixmap>
+#include <QMap>
+#include <QCoreApplication>
+#include <QDir>
 #include <vector>
 #include "qt_keyboard.hpp"
 
@@ -9,6 +13,7 @@ namespace biv {
     struct QtRenderObject {
         int x, y, width, height;
         QColor color;
+        QString sprite_path;
     };
 
     class QtWindow : public QWidget {
@@ -16,6 +21,7 @@ namespace biv {
     private:
         QtKeyboard* keyboard;
         std::vector<QtRenderObject> objects_to_draw;
+        QMap<QString, QPixmap> pixmap_cache;
         const int CELL_SIZE = 16;
 
     public:
@@ -42,15 +48,43 @@ namespace biv {
         }
 
         void paintEvent(QPaintEvent* event) override {
+            Q_UNUSED(event);
             QPainter painter(this);
+            painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
+
             for (const auto& obj : objects_to_draw) {
-                painter.fillRect(
-                    obj.x * CELL_SIZE, 
-                    obj.y * CELL_SIZE, 
-                    obj.width * CELL_SIZE, 
-                    obj.height * CELL_SIZE, 
-                    obj.color
-                );
+                QPixmap pixmap;
+                if (!obj.sprite_path.isEmpty()) {
+                    if (pixmap_cache.contains(obj.sprite_path)) {
+                        pixmap = pixmap_cache[obj.sprite_path];
+                    } else {
+                        QString exe_dir = QCoreApplication::applicationDirPath();
+                        QString full_path = exe_dir + "/" + obj.sprite_path;
+                        // pixmap.load(obj.sprite_path);
+                        if (!pixmap.load(full_path)) {
+                            pixmap.load(obj.sprite_path);
+                        }
+                        pixmap_cache[obj.sprite_path] = pixmap;
+                    }
+                }
+
+                if (!pixmap.isNull()) {
+                    painter.drawPixmap(
+                        obj.x * CELL_SIZE, 
+                        obj.y * CELL_SIZE, 
+                        obj.width * CELL_SIZE, 
+                        obj.height * CELL_SIZE, 
+                        pixmap
+                    );    
+                } else {
+                    painter.fillRect(
+                        obj.x * CELL_SIZE, 
+                        obj.y * CELL_SIZE, 
+                        obj.width * CELL_SIZE, 
+                        obj.height * CELL_SIZE, 
+                        obj.color
+                    );
+                }
             }
         }
     };

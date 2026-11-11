@@ -29,4 +29,9 @@ elseif(GAME_TYPE STREQUAL "LinuxConsole")
 elseif(GAME_TYPE STREQUAL "QtGui")
     target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
     target_compile_definitions(${PROJECT_NAME} PRIVATE QT_GUI)
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${CMAKE_SOURCE_DIR}/../assets
+	$<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
+	)
 endif()
